@@ -3,6 +3,9 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 import ElementUI from 'element-ui'
+import Mint from 'mint-ui';
+Vue.use(Mint);
+import 'mint-ui/lib/style.css'
 import 'element-ui/lib/theme-chalk/index.css'
 //import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 import '@/styles/index.scss' // global css
