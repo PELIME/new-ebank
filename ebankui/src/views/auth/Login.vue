@@ -38,7 +38,7 @@
                     </div>
                   
                     <br>
-                    <button @click="login" class="btn btn-lg btn-block btn-success">登 录</button>
+                    <button @click="login" :loading="loading"  class="btn btn-lg btn-block btn-success">登 录</button>
                   </div>
              <!-- End Loging form -->
 
@@ -59,7 +59,8 @@ export default {
             username:'',
             password:'',
             remember:false,
-            encode:false
+            encode:false,
+            loading:false,
         }
     },
      beforeMount:function(){
@@ -72,13 +73,13 @@ export default {
         }
     },
     methods: {
-        forget:function(){
+        forget(){
             this.$message({
                 type:'info',
                 message:"请联系管理员找回密码"
             });
         },
-        ememberMe:function(savePwd){
+        ememberMe(savePwd){
             var storage=window.localStorage;
             if(this.remember){
                 storage.setItem("username",this.username);
@@ -91,8 +92,31 @@ export default {
                 storage.removeItem("remember");
             }
         },
-        login:function(){
+        login(){
             console.log('login')
+            console.log(this.username)
+            if(!this.username||this.username==''){
+              this.$message({
+                message:"账号不能为空",
+                type:'error'
+              });
+              return;
+            }
+            if(!this.password||this.password==''){
+              this.$message({
+                message:"密码不能为空",
+                type:'error'
+              });
+              return;
+            }
+            this.loading=true;
+            this.$store.dispatch('user/login',{username:this.username,password:this.password}).then(()=>{
+              this.$router.push({ path: this.redirect || '/' })
+            this.loading = false
+            }).catch(()=>{
+              this.loading=false
+            });
+
         }
     }
 }

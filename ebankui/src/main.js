@@ -10,8 +10,12 @@ Vue.config.productionTip = false
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 //import '@/icons' // icon
-//import '@/permission' // permission control
+import '@/permission' // permission control
 Vue.use(ElementUI)
+
+
+const { mockXHR } = require('../mock')
+mockXHR()
 
 new Vue({
   el:'#app',
