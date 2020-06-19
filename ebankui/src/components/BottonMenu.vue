@@ -13,7 +13,7 @@
     <mt-tab-item id="2">
       <img slot="icon" v-if="selected==2" src="@/assets/NewsAc.png" />
       <img slot="icon" v-else src="@/assets/News.png" />
-      资讯
+      报表
     </mt-tab-item>
     <mt-tab-item id="3">
         <img slot="icon" v-if="selected==3" src="@/assets/MeAc.png" />
