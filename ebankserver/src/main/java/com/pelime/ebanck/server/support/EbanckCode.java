@@ -2,7 +2,7 @@ package com.pelime.ebanck.server.support;
 
 public class EbanckCode {
     //表示成功
-    public static String SUCCESS="000000";
+    public static String SUCCESS="20000";
     //简单的失败表示
     public static String FAIL="111111";
     //提供的密钥不正确，用于未登录，登录失败

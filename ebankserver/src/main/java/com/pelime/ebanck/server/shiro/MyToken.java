@@ -1,10 +1,12 @@
 package com.pelime.ebanck.server.shiro;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.shiro.authc.HostAuthenticationToken;
 import org.apache.shiro.authc.RememberMeAuthenticationToken;
 
 public class MyToken implements HostAuthenticationToken, RememberMeAuthenticationToken {
     private String username;
+    @JsonIgnore
     private String password;
     private boolean rememberMe;
     private String host;

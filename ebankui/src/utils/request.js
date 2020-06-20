@@ -8,8 +8,10 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   //生成环境
   //baseURL: 'http://xchengx.top',
+  //本地测试
+  baseURL: 'http://127.0.0.1',
   //开发环境
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  //baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -18,13 +20,15 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-
+    console.log('设置header头')
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      config.headers['Authorization'] = getToken()
+      console.log('设置Authorization：'+getToken())
     }
+    console.log(config)
     return config
   },
   error => {
@@ -50,7 +54,7 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== '20000') {
       Toast({
         message:res.message || 'Error',
         duration: 2 * 1000

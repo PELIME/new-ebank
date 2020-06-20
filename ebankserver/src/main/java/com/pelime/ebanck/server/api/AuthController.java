@@ -13,10 +13,11 @@ import org.apache.shiro.codec.Hex;
 import org.apache.shiro.crypto.AesCipherService;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -35,10 +36,10 @@ public class AuthController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    public Object login(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public Object login(@RequestBody Map<String,Object> map, HttpSession session){//@RequestParam("username") String username, @RequestParam("password") String password) {
         // 从SecurityUtils里边创建一个 subject
         Subject subject = SecurityUtils.getSubject();
-        MyToken token=new MyToken(username, password);
+        MyToken token=new MyToken(map.get("username").toString(), map.get("password").toString());
         // 执行认证登陆
         try {
             subject.login(token);
@@ -54,7 +55,9 @@ public class AuthController {
             return new EbanckHttpEntity(EbanckCode.BAD_CERTIFIED,"用户名或密码不正确！");
         }
         if (subject.isAuthenticated()) {
-            return new EbanckHttpEntity(EbanckCode.SUCCESS,"null");
+            Map<String,String> res=new HashMap<>();
+            res.put("token",session.getId());
+            return new EbanckHttpEntity(EbanckCode.SUCCESS,res);
         } else {
             token.clear();
             return new EbanckHttpEntity(EbanckCode.BAD_CERTIFIED,"登录失败");

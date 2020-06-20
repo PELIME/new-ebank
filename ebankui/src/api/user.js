@@ -2,17 +2,18 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/ebank/user/login',
+    url: '/api/auth/login',
     method: 'post',
+    contentType:'application/x-www-form-urlencoded',
     data
   })
 }
 
 export function getInfo(token) {
   return request({
-    url: '/ebank/user/info',
+    url: '/api/user/userinfo',
     method: 'get',
-    params: { token }
+    //params: { token }
   })
 }
 

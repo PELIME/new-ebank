@@ -34,7 +34,7 @@ const authinfo={
 module.exports = [
   // user login
   {
-    url: '/ebank/user/login',
+    url: '/api/auth/login',
     type: 'post',
     response: config => {
       const { username, password} = config.body;
@@ -62,7 +62,7 @@ module.exports = [
 
   // get user info
   {
-    url: '/ebank/user/info\.*',
+    url: '/api/user/userinfo',
     type: 'get',
     response: config => {
       const { token } = config.query

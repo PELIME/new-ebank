@@ -4,13 +4,11 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: '',
-    avatar: ''
+    username: ''
   }
 }
 
 const state = getDefaultState()
-
 const mutations = {
   RESET_STATE: (state) => {
     Object.assign(state, getDefaultState())
@@ -19,10 +17,22 @@ const mutations = {
     state.token = token
   },
   SET_NAME: (state, name) => {
-    state.name = name
+    state.username = username
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  SET_PHOMNE: (state,phone)=>{
+    state.phone=phone
+  },
+  SET_NUMBER: (state,number)=>{
+    state.number=number
+  },
+  SET_EMAIL: (state,email)=>{
+    state.email=email
+  },
+  SET_DESC: (state,description)=>{
+    state.description=description
+  },
+  SET_REMARK: (state,remark)=>{
+    state.remark=remark
   }
 }
 
@@ -32,9 +42,11 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        const { body } = response
+        console.log(body)
+        console.log(body.token)
+        commit('SET_TOKEN', body.token)
+        setToken(body.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -46,16 +58,21 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
+        console.log('getInfo')
+        console.log(response)
+        const { body } = response
+        if (!body) {
           reject('Verification failed, please Login again.')
         }
+        
+        const { username, phone,number,email,description,remark } = body
 
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_NAME', username)
+        commit('SET_PHOMNE', phone)
+        commit('SET_NUMBER', number)
+        commit('SET_EMAIL', email)
+        commit('SET_DESC', description)
+        commit('SET_REMARK', remark)
         resolve(data)
       }).catch(error => {
         reject(error)
