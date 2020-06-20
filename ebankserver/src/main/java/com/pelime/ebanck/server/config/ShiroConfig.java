@@ -4,6 +4,7 @@ import com.pelime.ebanck.server.service.AuthenticationService;
 import com.pelime.ebanck.server.shiro.CORSAuthenticationFilter;
 import com.pelime.ebanck.server.shiro.CustomRealm;
 import com.pelime.ebanck.server.shiro.CustomSessionManager;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.codec.Base64;
@@ -35,7 +36,22 @@ public class ShiroConfig {
 
     @Bean
     public Realm realm(){
-        return new CustomRealm();
+        CustomRealm customRealm= new CustomRealm();
+        customRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        return customRealm;
+    }
+
+
+    @Bean(name = "credentialsMatcher")
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        // 散列算法:这里使用MD5算法;
+        hashedCredentialsMatcher.setHashAlgorithmName("md5");
+        // 散列的次数，比如散列两次，相当于 md5(md5(""));
+        hashedCredentialsMatcher.setHashIterations(2);
+        // storedCredentialsHexEncoded默认是true，此时用的是密码加密用的是Hex编码；false时用Base64编码
+        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
+        return hashedCredentialsMatcher;
     }
     @Bean
     public CacheManager cacheManager(){

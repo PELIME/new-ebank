@@ -1,5 +1,6 @@
 package com.pelime.ebanck.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Fetch;
@@ -32,11 +33,13 @@ public class User {
 
     @OneToMany(targetEntity=Role.class,mappedBy="user")	//一对多，让Employee维护外键
     @Cascade(CascadeType.SAVE_UPDATE) //级联
+    @JsonIgnore
     private Set<Role> roles = new HashSet<Role>();
 
     @OneToOne(cascade = javax.persistence.CascadeType.ALL)
     @Fetch(value = FetchMode.SELECT)
     @PrimaryKeyJoinColumn
+    @JsonIgnore
     private UserState userState;
 
     public Long getId() {
