@@ -28,7 +28,7 @@ service.interceptors.request.use(
       config.headers['Authorization'] = getToken()
       console.log('设置Authorization：'+getToken())
     }
-    console.log(config)
+    //console.log(config)
     return config
   },
   error => {

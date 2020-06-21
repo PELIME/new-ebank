@@ -9,7 +9,8 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {
+  console.log(localStorage.getItem('ebank_token'))
   return request({
     url: '/api/user/userinfo',
     method: 'get',

@@ -16,7 +16,7 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
+  SET_NAME: (state, username) => {
     state.username = username
   },
   SET_PHOMNE: (state,phone)=>{
@@ -57,7 +57,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo().then(response => {
         console.log('getInfo')
         console.log(response)
         const { body } = response
@@ -73,7 +73,7 @@ const actions = {
         commit('SET_EMAIL', email)
         commit('SET_DESC', description)
         commit('SET_REMARK', remark)
-        resolve(data)
+        resolve(body)
       }).catch(error => {
         reject(error)
       })
