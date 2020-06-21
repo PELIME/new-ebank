@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
-import { Toast } from 'mint-ui';
+//import { MessageBox, Message } from 'element-ui'
+import { Toast,MessageBox } from 'mint-ui';
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
@@ -20,13 +20,11 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    console.log('设置header头')
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
       config.headers['Authorization'] = getToken()
-      console.log('设置Authorization：'+getToken())
     }
     //console.log(config)
     return config
@@ -62,11 +60,16 @@ service.interceptors.response.use(
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
+        // MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+        //   confirmButtonText: 'Re-Login',
+        //   cancelButtonText: 'Cancel',
+        //   type: 'warning'
+        // }).then(() => {
+        //   store.dispatch('user/resetToken').then(() => {
+        //     location.reload()
+        //   })
+        // })
+        MessageBox.alert("登录信息过期，请重新登录").then(()=>{
           store.dispatch('user/resetToken').then(() => {
             location.reload()
           })
@@ -79,9 +82,8 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    Message({
+    Toast({
       message: error.message,
-      type: 'error',
       duration: 5 * 1000
     })
     return Promise.reject(error)

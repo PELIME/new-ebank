@@ -2,31 +2,43 @@
   <div>
     <common-header></common-header>
     <div class="main">
-      <mt-field label="自我介绍" placeholder="短信内容" type="textarea" rows="4" v-model="msg"></mt-field>
-      <mt-field label="选择excel" >
-          <input type="file" id="excelInputFile" v-on:change="fileChange()"/>
+      <mt-popup v-model="popupVisible" position="bottom" class="mint-popup-3">
+        <div class="model-picker">
+          <mt-picker :slots="modelOptions" @change="onValuesChange" @click="popupVisible=false"></mt-picker>
+        </div>
+        <!-- <mt-button  size="small" type="primary">生成链接</mt-button> -->
+      </mt-popup>
+      <!-- <mt-popup v-model="popupVisible" popup-transition="popup-fade" :modal="true">
+        <mt-picker :slots="modelOptions" @change="onValuesChange"></mt-picker>
+      </mt-popup> -->
+      <mt-field label="短信内容" placeholder="请输入短信内容" type="textarea" rows="4" v-model="msg"></mt-field>
+      <mt-field label="选择excel">
+        <input type="file" id="excelInputFile" v-on:change="fileChange()" />
       </mt-field>
       <mt-field label="电话列名" placeholder="请输入电话号码所在的列名" v-model="columnName"></mt-field>
-      <mt-field>
-          <mt-button @click="buildMsg" size="small" type="primary">生成链接</mt-button>
-      </mt-field>
-      <mt-field>
-          <mt-button @click="getLink" size="small" type="primary">获取链接</mt-button>
-      </mt-field>
-      <mt-field>
-          <mt-button @click="saveLink" size="small" :disabled="!ready" type="primary">保存链接</mt-button>
-      </mt-field>
-      <mt-field>
-          <mt-button @click="sendMsg" size="small" type="primary" :disabled="!ready">发送短信</mt-button>
-      </mt-field>
-      <a :href="telhref" ref="tela" style="visibility:hidden;" ></a>
+      <mt-cell>
+        <mt-button @click="buildMsg" size="small" type="primary">生成链接</mt-button>
+      </mt-cell>
+      <mt-cell>
+        <mt-button @click="getLink" size="small" type="primary">获取链接</mt-button>
+      </mt-cell>
+      <mt-cell>
+        <mt-button @click="saveLink" size="small" :disabled="!ready" type="primary">保存链接</mt-button>
+      </mt-cell>
+      <mt-cell>
+        <mt-button @click="sendMsg" size="small" type="primary" :disabled="!ready">发送短信</mt-button>
+      </mt-cell>
+      <mt-cell>
+        <mt-button @click="popupVisible=true" size="small" type="primary">test</mt-button>
+      </mt-cell>
+      <a :href="telhref" ref="tela" style="visibility:hidden;"></a>
     </div>
   </div>
 </template>
 <script>
 import XLSX from "xlsx";
 import CommonHeader from "@/components/main/CommonHeader";
-import { saveLink,getLink} from '@/api/phone-message'
+import { saveLink, getLink, getMessageModels } from "@/api/phone-message";
 export default {
   name: "SendMessages",
   components: {
@@ -39,8 +51,33 @@ export default {
       filePath: "",
       telhref: "",
       ready: false,
-      phones: ""
+      phones: "",
+      popupVisible: false,
+      selectMode: "",
+      modelOptions: [
+        {
+          values: ["自定义"],
+          className: "mint-popup-3",
+          textAlign: "center",
+          defaultIndex: 0
+        }
+      ],
+      models: { 自定义: { id: 0, name: "自定义", content: "" } }
     };
+  },
+  beforeMount() {
+    getMessageModels().then(res => {
+      var data = res.body;
+      console.log(data);
+      //   this.models["自定义"] = { id: 0, name: "自定义", content: "" };
+      //   this.modelOptions.push("自定义");
+      //   for (var i = 0; i < data.length; i++) {
+      //     this.modelOptions.push(data[i].name);
+      //     this.models[data[i].name] = data[i];
+      //   }
+      //   console.log(this.modelOptions);
+      //   console.log(this.models);
+    });
   },
   methods: {
     fileChange() {
@@ -96,26 +133,39 @@ export default {
       reader.readAsBinaryString(file);
     },
     saveLink() {
-        saveLink({phones:this.phones, body:this.msg}).then(()=>{
-            this.$toast('保存成功')
-        }).catch(()=>{
-            this.$toast('保存失败')
+      saveLink({ phones: this.phones, body: this.msg })
+        .then(() => {
+          this.$toast("保存成功");
         })
+        .catch(() => {
+          this.$toast("保存失败");
+        });
     },
     getLink() {
-        getLink().then((res)=>{
-            this.phones=res.data.phones;
-            this.msg=res.data.body;
-            this.$toast('获取成功');
-        }).catch(()=>{
-            this.$toast('获取失败');
+      getLink()
+        .then(res => {
+          console.log(res);
+          var data = res.body;
+          this.phones = data.phones;
+          this.msg = data.body;
+          this.$toast("获取成功");
         })
-    }
+        .catch(err => {
+          console.log(err);
+          this.$toast("获取失败");
+        });
+    },
+    onValuesChange() {}
   }
 };
 </script>
 <style scoped>
 .main {
   margin-top: 40px;
+}
+.mint-popup-3 {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
 }
 </style>

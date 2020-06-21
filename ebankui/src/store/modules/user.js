@@ -43,8 +43,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { body } = response
-        console.log(body)
-        console.log(body.token)
         commit('SET_TOKEN', body.token)
         setToken(body.token)
         resolve()
@@ -55,18 +53,14 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({ commit}) {
     return new Promise((resolve, reject) => {
       getInfo().then(response => {
-        console.log('getInfo')
-        console.log(response)
         const { body } = response
         if (!body) {
-          reject('Verification failed, please Login again.')
+          reject('验证失败, 请重新登录')
         }
-        
         const { username, phone,number,email,description,remark } = body
-
         commit('SET_NAME', username)
         commit('SET_PHOMNE', phone)
         commit('SET_NUMBER', number)

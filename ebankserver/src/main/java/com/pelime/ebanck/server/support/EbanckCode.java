@@ -7,6 +7,8 @@ public class EbanckCode {
     public static String FAIL="111111";
     //提供的密钥不正确，用于未登录，登录失败
     public static String BAD_CERTIFIED="400400";
+
+    public static Integer BAD_TOKEN=50012;
     //用户已存在
     public static String USER_EXISTS="332233";
 

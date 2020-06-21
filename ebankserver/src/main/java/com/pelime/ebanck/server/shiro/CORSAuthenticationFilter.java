@@ -1,6 +1,7 @@
 package com.pelime.ebanck.server.shiro;
 
 import com.alibaba.fastjson.JSON;
+import com.pelime.ebanck.server.support.EbanckCode;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +39,8 @@ public class CORSAuthenticationFilter extends FormAuthenticationFilter {
         res.setCharacterEncoding("UTF-8");
         PrintWriter writer = res.getWriter();
         Map<String, Object> map= new HashMap<>();
-        map.put("code", 702);
-        map.put("msg", "未登录");
+        map.put("code", EbanckCode.BAD_TOKEN);
+        map.put("message", "未登录");
         writer.write(JSON.toJSONString(map));
         writer.close();
         return false;
