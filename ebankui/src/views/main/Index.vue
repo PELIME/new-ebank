@@ -2,7 +2,7 @@
   <div>
     <mt-header fixed>
       <router-link to="/" slot="left">
-        <img src="@/assets/tb.png" class="tbimg" />
+        <img src="@/assets/tb1.png" class="tbimg" />
       </router-link>
       <mt-button slot="right">
         <img src="@/assets/sz.png" class="czimag" />
